@@ -8,7 +8,7 @@ var logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bycrypt = require("bcryptjs");
-// TODO: Require User model
+const User = require("./models/User");
 
 // Passport imports
 const passport = require("passport");
@@ -32,6 +32,7 @@ var app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
