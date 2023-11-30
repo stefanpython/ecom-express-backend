@@ -1,7 +1,8 @@
-const bycrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { body } = require("express-validator");
+const passport = require("passport");
 
 // Signup
 exports.signup = [
@@ -15,8 +16,7 @@ exports.signup = [
   async (req, res) => {
     const { firstName, lastName, email, password, confirmPassword } = req.body;
 
-    console.log(password, confirmPassword);
-
+    // Confirm password
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
@@ -29,7 +29,7 @@ exports.signup = [
       }
 
       // Encrypt password
-      const hashedPassword = await bycrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create new user
       const newUser = new User({
@@ -49,3 +49,25 @@ exports.signup = [
     }
   },
 ];
+
+// LogIn
+exports.login = (req, res, next) => {
+  passport.authenticate("login", (err, user, info) => {
+    if (err) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Generate JWT token for successful authentication
+    const token = jwt.sign(
+      { userId: user.id, username: user.fullName },
+      "tao",
+      { expiresIn: "1day" }
+    );
+
+    res.json({ message: "Login successful", token });
+  })(req, res, next);
+};
