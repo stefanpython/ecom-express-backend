@@ -28,10 +28,19 @@ router.get("/product_list", product_controller.product_list);
 // -- Get details of a product --
 router.get("/product/:productId", product_controller.get_product_details);
 
+// -- Update details of a product --
+router.put(
+  "/update_product/:productId",
+  passport.authenticate("jwt", { session: false }),
+  product_controller.update_product_details
+);
+
+// -- Delete a product --
+
 module.exports = router;
 
 // TODO:  - Create a new product - DONE
 //        - Get a list of all products - DONE
-//        - Get details of a specific product
+//        - Get details of a specific product - DONE
 //        - Update details of a specific product
 //        - Delete a product
