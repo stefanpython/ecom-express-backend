@@ -25,10 +25,13 @@ router.post(
 // -- Get list of all products --
 router.get("/product_list", product_controller.product_list);
 
+// -- Get details of a product --
+router.get("/product/:productId", product_controller.get_product_details);
+
 module.exports = router;
 
 // TODO:  - Create a new product - DONE
-//        - Get a list of all products
+//        - Get a list of all products - DONE
 //        - Get details of a specific product
 //        - Update details of a specific product
 //        - Delete a product

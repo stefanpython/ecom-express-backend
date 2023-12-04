@@ -1,4 +1,4 @@
-const { body, validationResult } = require("express-validator");
+const { body, param, validationResult } = require("express-validator");
 const Product = require("../models/Product");
 
 // Create new product
@@ -58,3 +58,35 @@ exports.product_list = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Get details of a specific product
+exports.get_product_details = [
+  // Validate product ID
+  param("productId").isMongoId().withMessage("Invalid Product ID"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      // Extract the product ID from the request parameters
+      const { productId } = req.params;
+
+      // Find the product by ID in the database
+      const product = await Product.findById(productId);
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      // Send the product details as a response
+      res.status(200).json(product);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
