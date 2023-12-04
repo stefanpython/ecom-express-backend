@@ -65,7 +65,7 @@ exports.login = (req, res, next) => {
     const token = jwt.sign(
       { userId: user.id, username: user.fullName },
       "tao",
-      { expiresIn: "1day" }
+      { expiresIn: "7days" }
     );
 
     res.json({ message: "Login successful", token });
