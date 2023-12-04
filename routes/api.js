@@ -14,15 +14,20 @@ router.post("/sign-up", user_controller.signup);
 router.post("/login", user_controller.login);
 
 // PRODUCT ROUTES
+
+// -- Create product --
 router.post(
   "/create_product",
   passport.authenticate("jwt", { session: false }),
   product_controller.create_product
 );
 
+// -- Get list of all products --
+router.get("/product_list", product_controller.product_list);
+
 module.exports = router;
 
-// TODO:  - Create a new product
+// TODO:  - Create a new product - DONE
 //        - Get a list of all products
 //        - Get details of a specific product
 //        - Update details of a specific product
