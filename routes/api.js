@@ -36,11 +36,16 @@ router.put(
 );
 
 // -- Delete a product --
+router.delete(
+  "/delete_product/:productId",
+  passport.authenticate("jwt", { session: false }),
+  product_controller.delete_product
+);
 
 module.exports = router;
 
 // TODO:  - Create a new product - DONE
 //        - Get a list of all products - DONE
 //        - Get details of a specific product - DONE
-//        - Update details of a specific product
-//        - Delete a product
+//        - Update details of a specific product - DONE
+//        - Delete a product - DONE
