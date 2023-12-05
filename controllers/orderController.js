@@ -2,7 +2,6 @@ const { body, param, validationResult } = require("express-validator");
 const Order = require("../models/Order");
 
 // CREATE new order
-
 exports.order_create = [
   // Validation middleware using express-validator
   body("items").isArray().withMessage("Items must be an array"),
@@ -49,3 +48,16 @@ exports.order_create = [
     }
   },
 ];
+
+// GET list of all orders
+exports.order_list = async (req, res) => {
+  try {
+    // Retrieve all orders from database
+    const orders = await Order.find();
+
+    res.status(200).json({ message: "List retrieved successfully", orders });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -53,6 +53,11 @@ router.post(
 );
 
 // -- Get list of all orders
+router.get(
+  "/order_list",
+  passport.authenticate("jwt", { session: false }),
+  order_controller.order_list
+);
 
 // -- Get details of a specific order
 
@@ -63,8 +68,8 @@ router.post(
 module.exports = router;
 
 // TODO:       Order Routes:
-//              Create a new order
-//               Get a list of all orders
-//               Get details of a specific order
-//                Update the status of a specific order
-//                 Delete an order
+//              Create a new order - DONE
+//              Get a list of all orders
+//              Get details of a specific order
+//              Update the status of a specific order
+//              Delete an order
