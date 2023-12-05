@@ -147,3 +147,37 @@ exports.update_order_details = [
     }
   },
 ];
+
+// DELETE a product
+exports.delete_order = [
+  // Validation middleware for productId
+  param("orderId").isMongoId().withMessage("Invalid orderId"),
+
+  // Check for validation errors
+  (req, res, next) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+    next();
+  },
+
+  // Try deleting the product
+  async (req, res) => {
+    try {
+      const { orderId } = req.params; // Extract productId from the URL parameter
+
+      // Find the product by productId and delete it
+      const result = await Order.deleteOne({ _id: orderId });
+
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      res.status(200).json({ message: "Order deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];

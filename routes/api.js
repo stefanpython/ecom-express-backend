@@ -74,6 +74,11 @@ router.put(
 );
 
 // -- Delete an order
+router.delete(
+  "/delete_order/:orderId",
+  passport.authenticate("jwt", { session: false }),
+  order_controller.delete_order
+);
 
 module.exports = router;
 
@@ -81,5 +86,5 @@ module.exports = router;
 //              Create a new order - DONE
 //              Get a list of all orders - DONE
 //              Get details of a specific order - DONE
-//              Update the status of a specific order
+//              Update the status of a specific order - DONE
 //              Delete an order
