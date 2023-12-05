@@ -4,6 +4,7 @@ const passport = require("passport");
 const user_controller = require("../controllers/userController");
 const product_controller = require("../controllers/productController");
 const order_controller = require("../controllers/orderController");
+const cart_controller = require("../controllers/cartController");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -14,7 +15,7 @@ router.get("/", function (req, res, next) {
 router.post("/sign-up", user_controller.signup);
 router.post("/login", user_controller.login);
 
-// PRODUCT ROUTES
+//------------------ PRODUCT ROUTES --------------------
 
 // -- Create product --
 router.post(
@@ -43,7 +44,7 @@ router.delete(
   product_controller.delete_product
 );
 
-// ORDER ROUTES
+// ----------------- ORDER ROUTES -------------------
 
 // -- Create a new order --
 router.post(
@@ -78,6 +79,16 @@ router.delete(
   "/delete_order/:orderId",
   passport.authenticate("jwt", { session: false }),
   order_controller.delete_order
+);
+
+// ------------------- CART ROUTES ---------------------
+
+// -- Add a product to the user's cart --
+
+router.post(
+  "/add_to_cart",
+  passport.authenticate("jwt", { session: false }),
+  cart_controller.add_product_to_cart
 );
 
 module.exports = router;
