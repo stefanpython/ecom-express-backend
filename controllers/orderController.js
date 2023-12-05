@@ -61,3 +61,35 @@ exports.order_list = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// GET details of a specific order
+exports.get_order_details = [
+  // Validate product ID
+  param("orderId").isMongoId().withMessage("Invalid Product ID"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      // Extract the product ID from the request parameters
+      const { orderId } = req.params;
+
+      // Find the product by ID in the database
+      const order = await Order.findById(orderId);
+
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      // Send the product details as a response
+      res.status(200).json({ message: "Get request is a success", order });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
