@@ -82,9 +82,9 @@ router.delete(
 
 module.exports = router;
 
-// TODO:       Order Routes:
-//              Create a new order - DONE
-//              Get a list of all orders - DONE
-//              Get details of a specific order - DONE
-//              Update the status of a specific order - DONE
-//              Delete an order
+// TODO:      Cart Routes:
+//              Add a product to the user's cart
+//              Get the user's cart contents
+//              Update the quantity of a product in the cart
+//              Remove a product from the cart
+//              Clear the entire cart

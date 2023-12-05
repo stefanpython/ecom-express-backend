@@ -1,5 +1,6 @@
 const { body, param, validationResult } = require("express-validator");
 const Order = require("../models/Order");
+const User = require("../models/User");
 
 // CREATE new order
 exports.order_create = [
@@ -38,6 +39,13 @@ exports.order_create = [
 
       // Save the new order to the database
       const savedOrder = await newOrder.save();
+
+      // Update the user`s orders array
+      await User.findByIdAndUpdate(
+        user,
+        { $push: { orders: savedOrder._id } },
+        { new: true }
+      );
 
       res
         .status(201)
