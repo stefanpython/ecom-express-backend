@@ -3,6 +3,7 @@ var router = express.Router();
 const passport = require("passport");
 const user_controller = require("../controllers/userController");
 const product_controller = require("../controllers/productController");
+const order_controller = require("../controllers/orderController");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -42,10 +43,28 @@ router.delete(
   product_controller.delete_product
 );
 
+// ORDER ROUTES
+
+// -- Create a new order --
+router.post(
+  "/create_order",
+  passport.authenticate("jwt", { session: false }),
+  order_controller.order_create
+);
+
+// -- Get list of all orders
+
+// -- Get details of a specific order
+
+// -- Update the status of a specific order
+
+// -- Delete an order
+
 module.exports = router;
 
-// TODO:  - Create a new product - DONE
-//        - Get a list of all products - DONE
-//        - Get details of a specific product - DONE
-//        - Update details of a specific product - DONE
-//        - Delete a product - DONE
+// TODO:       Order Routes:
+//              Create a new order
+//               Get a list of all orders
+//               Get details of a specific order
+//                Update the status of a specific order
+//                 Delete an order
