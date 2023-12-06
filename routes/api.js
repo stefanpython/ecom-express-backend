@@ -84,7 +84,14 @@ router.delete(
 // ------------------- CART ROUTES ---------------------
 
 // -- Add a product to the user's cart --
-router.post("/add_to_cart", cart_controller.add_product_to_cart);
+router.post("/add_cart-guest", cart_controller.add_product_to_cart);
+router.post(
+  "/add_cart-auth",
+  passport.authenticate("jwt", { session: false }),
+  cart_controller.add_product_to_cart
+);
+
+//                    -------------
 
 // Get the user's cart contents for a guest
 router.get("/cart_guest", cart_controller.get_cart_content);
@@ -96,11 +103,26 @@ router.get(
   cart_controller.get_cart_content
 );
 
+//                   --------------
+
+// Update the quantity of a product in the authenticated user`s cart
+router.put(
+  "/cart/update_auth/:productId",
+  passport.authenticate("jwt", { session: false }),
+  cart_controller.update_cart_quantity
+);
+
+// Update the quantity of a product in the guest's cart
+router.put(
+  "/cart/update_guest/:productId",
+  cart_controller.update_cart_quantity
+);
+
 module.exports = router;
 
 // TODO:      Cart Routes:
 //              Add a product to the user's cart - DONE
-//              Get the user's cart contents
-//              Update the quantity of a product in the cart
+//              Get the user's cart contents - DONE
+//              Update the quantity of a product in the cart - DONE
 //              Remove a product from the cart
 //              Clear the entire cart
