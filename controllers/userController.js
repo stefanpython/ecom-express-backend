@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Cart = require("../models/Cart");
 const { body } = require("express-validator");
 const passport = require("passport");
 
@@ -51,8 +52,8 @@ exports.signup = [
 ];
 
 // LogIn
-exports.login = (req, res, next) => {
-  passport.authenticate("login", (err, user, info) => {
+exports.login = async (req, res, next) => {
+  passport.authenticate("login", async (err, user, info) => {
     if (err) {
       return res.status(500).json({ message: "Internal server error" });
     }
@@ -67,6 +68,15 @@ exports.login = (req, res, next) => {
       "tao",
       { expiresIn: "7days" }
     );
+
+    // Check if there is a guest cart associated with the session
+    const guestCart = await Cart.findOne({ user: null });
+
+    if (guestCart) {
+      // Update the guest cart with the authenticated user's ID
+      guestCart.user = user.id;
+      await guestCart.save();
+    }
 
     res.json({ message: "Login successful", token });
   })(req, res, next);

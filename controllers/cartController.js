@@ -1,7 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const Cart = require("../models/Cart");
 
-// ADD a product to the user's cart
+// Add a product to the user's cart (supports guest cart)
 exports.add_product_to_cart = [
   // Validation middleware using express-validator
   body("product").isMongoId().withMessage("Invalid product ID"),
@@ -15,39 +15,68 @@ exports.add_product_to_cart = [
     }
 
     try {
-      // Use authenticated user data from req.user
-      const { _id: user } = req.user;
+      // Use authenticated user data from req.user if available
+      const userId = req.user ? req.user._id : null;
+
+      // Destructure fields from the request body
       const { product, quantity } = req.body;
 
-      // Find the user's cart or create a new one if it doesn't exist
-      let userCart = await Cart.findOne({ user });
+      // Find the user's cart or create a new one
+      let userCart = await Cart.findOne({ user: userId });
 
       if (!userCart) {
-        userCart = new Cart({ user, items: [] });
+        userCart = new Cart({ user: userId, items: [] });
       }
 
       // Check if the product is already in the cart
-      const existingItem = userCart.items.find((item) =>
+      const existingProductIndex = userCart.items.findIndex((item) =>
         item.product.equals(product)
       );
 
-      // If the product is already in the cart, update the quantity
-      // Otherwise, add a new item to the cart
-      if (existingItem) {
-        existingItem.quantity += quantity;
+      if (existingProductIndex !== -1) {
+        // If the product already exists, update the quantity
+        userCart.items[existingProductIndex].quantity += quantity;
       } else {
+        // If the product is not in the cart, add it
         userCart.items.push({ product, quantity });
       }
 
-      // Save the updated or new cart to the database
+      // Save the updated cart to the database
       const savedCart = await userCart.save();
 
-      res
-        .status(200)
-        .json({ message: "Product added to the cart successfully", savedCart });
+      res.status(201).json({
+        message: "Product added to the cart successfully",
+        cart: savedCart,
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
   },
 ];
+
+// Get the user's cart contents (supports guest cart)
+exports.get_cart_content = async (req, res) => {
+  try {
+    // Use authenticated user data from req.user if available
+    const userId = req.user ? req.user._id : null;
+
+    // Find the user's cart based on the user ID
+    const userCart = await Cart.findOne({ user: userId }).populate(
+      "items.product",
+      "name price"
+    );
+
+    if (!userCart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    res.json({
+      message: "User's cart contents retrieved successfully",
+      cart: userCart,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
