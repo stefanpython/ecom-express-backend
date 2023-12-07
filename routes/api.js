@@ -84,15 +84,14 @@ router.delete(
 // ------------------- CART ROUTES ---------------------
 
 // -- Add a product to the user's cart --
-router.post("/add_cart-guest", cart_controller.add_product_to_cart);
+router.post("/add_cart_guest", cart_controller.add_product_to_cart);
 router.post(
-  "/add_cart-auth",
+  "/add_cart_auth",
   passport.authenticate("jwt", { session: false }),
   cart_controller.add_product_to_cart
 );
 
 //                    -------------
-
 // Get the user's cart contents for a guest
 router.get("/cart_guest", cart_controller.get_cart_content);
 
@@ -104,7 +103,6 @@ router.get(
 );
 
 //                   --------------
-
 // Update the quantity of a product in the authenticated user`s cart
 router.put(
   "/cart/update_auth/:productId",
@@ -116,6 +114,20 @@ router.put(
 router.put(
   "/cart/update_guest/:productId",
   cart_controller.update_cart_quantity
+);
+
+//                   --------------
+// Remove a product from the authenticated user's cart
+router.delete(
+  "/cart/remove_auth/:productId",
+  passport.authenticate("jwt", { session: false }),
+  cart_controller.remove_product_cart
+);
+
+// Remove a product from the guest user's cart
+router.delete(
+  "/cart/remove_guest/:productId",
+  cart_controller.remove_product_cart
 );
 
 module.exports = router;

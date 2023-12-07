@@ -153,3 +153,79 @@ exports.update_cart_quantity = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Remove a product from the user's cart (supports guest cart)
+exports.remove_product_cart = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+
+    // Check if the request is from an authenticated user
+    if (req.user) {
+      // Authenticated user logic
+      const userId = req.user._id;
+      const userCart = await Cart.findOne({ user: userId });
+
+      if (!userCart) {
+        return res.status(404).json({ message: "Cart not found" });
+      }
+
+      // Find the index of the product in the cart items
+      const productIndex = userCart.items.findIndex(
+        (item) => item.product.toString() === productId
+      );
+
+      if (productIndex === -1) {
+        return res.status(404).json({
+          message: "Product not found in the authenticated user's cart",
+        });
+      }
+
+      // Remove the product from the cart
+      userCart.items.splice(productIndex, 1);
+
+      // Save the updated cart
+      const updatedCart = await userCart.save();
+
+      return res.json({
+        message:
+          "Product removed successfully from the authenticated user's cart",
+        cart: updatedCart,
+      });
+    } else {
+      // Guest user logic
+      // Retrieve or create a guest cart based on a session identifier
+      let guestCart = await Cart.findOne({ user: null });
+
+      if (!guestCart) {
+        return res
+          .status(404)
+          .json({ message: "Product not found in the guest user's cart" });
+      }
+
+      // Find the index of the product in the guest cart items
+      const productIndex = guestCart.items.findIndex(
+        (item) => item.product.toString() === productId
+      );
+
+      if (productIndex === -1) {
+        return res.status(404).json({
+          message: "Product not found in the guest user's cart",
+        });
+      }
+
+      // Remove the product from the guest cart
+      guestCart.items.splice(productIndex, 1);
+
+      // Save the updated guest cart
+      const updatedGuestCart = await guestCart.save();
+
+      return res.json({
+        message: "Product removed successfully from the guest user's cart",
+        cart: updatedGuestCart,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
