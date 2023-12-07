@@ -130,11 +130,22 @@ router.delete(
   cart_controller.remove_product_cart
 );
 
+//                   --------------
+// Clear the entire cart for the authenticated user
+router.delete(
+  "/cart/clear_auth",
+  passport.authenticate("jwt", { session: false }),
+  cart_controller.clear_cart
+);
+
+// Clear the entire cart for the guest user
+router.delete("/cart/clear_guest", cart_controller.clear_cart);
+
 module.exports = router;
 
 // TODO:      Cart Routes:
 //              Add a product to the user's cart - DONE
 //              Get the user's cart contents - DONE
 //              Update the quantity of a product in the cart - DONE
-//              Remove a product from the cart
+//              Remove a product from the cart - DONE
 //              Clear the entire cart

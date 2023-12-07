@@ -229,3 +229,54 @@ exports.remove_product_cart = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Clear the entire cart for the user (supports guest cart)
+exports.clear_cart = async (req, res) => {
+  try {
+    // Check if the request is from an authenticated user
+    if (req.user) {
+      // Authenticated user logic
+      const userId = req.user._id;
+      const userCart = await Cart.findOne({ user: userId });
+
+      if (!userCart) {
+        return res.status(404).json({ message: "Cart not found" });
+      }
+
+      // Clear the entire cart
+      userCart.items = [];
+
+      // Save the updated cart
+      const updatedCart = await userCart.save();
+
+      return res.json({
+        message: "Cart cleared successfully for the authenticated user",
+        cart: updatedCart,
+      });
+    } else {
+      // Guest user logic
+      // Retrieve or create a guest cart based on a session identifier
+      let guestCart = await Cart.findOne({ user: null });
+
+      if (!guestCart) {
+        return res
+          .status(404)
+          .json({ message: "Cart not found for the guest user" });
+      }
+
+      // Clear the entire guest cart
+      guestCart.items = [];
+
+      // Save the updated guest cart
+      const updatedGuestCart = await guestCart.save();
+
+      return res.json({
+        message: "Cart cleared successfully for the guest user",
+        cart: updatedGuestCart,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
