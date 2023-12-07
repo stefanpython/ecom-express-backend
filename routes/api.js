@@ -147,11 +147,14 @@ router.delete("/cart/clear_guest", cart_controller.clear_cart);
 // Create a new category
 router.post("/categories", category_controller.create_category);
 
+// Get list with all categories
+router.get("/category_list", category_controller.category_list);
+
 module.exports = router;
 
 // TODO:
 //       Category Routes:
-//           Create a new category
+//           Create a new category - DONE
 //           Get a list of all categories
 //           Get details of a specific category
 //           Update details of a specific category

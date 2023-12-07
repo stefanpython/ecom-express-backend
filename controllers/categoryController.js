@@ -1,5 +1,6 @@
 const Category = require("../models/Category");
 
+// CREATE new category
 exports.create_category = async (req, res) => {
   try {
     const { name, description } = req.body;
@@ -25,6 +26,21 @@ exports.create_category = async (req, res) => {
       message: "Category created successfully",
       category: savedCategory,
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// GET list with all categories
+exports.category_list = async (req, res) => {
+  try {
+    // Retrieve all categories from the database
+    const categories = await Category.find();
+
+    res
+      .status(200)
+      .json({ message: "List retrieved successfully", categories });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
