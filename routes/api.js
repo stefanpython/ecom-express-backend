@@ -153,12 +153,19 @@ router.get("/category_list", category_controller.category_list);
 // Get details of a category
 router.get("/category/:categoryId", category_controller.get_category_details);
 
+// Update a specific category
+router.put(
+  "/update_category/:categoryId",
+  passport.authenticate("jwt", { session: false }),
+  category_controller.update_category
+);
+
 module.exports = router;
 
 // TODO:
 //       Category Routes:
 //           Create a new category - DONE
 //           Get a list of all categories - DONE
-//           Get details of a specific category
+//           Get details of a specific category - DONE
 //           Update details of a specific category
 //           Delete a category (consider the impact on associated products)
