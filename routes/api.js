@@ -160,6 +160,13 @@ router.put(
   category_controller.update_category
 );
 
+// Delete a category and update associated products
+router.delete(
+  "/category/:categoryId",
+  passport.authenticate("jwt", { session: false }),
+  category_controller.delete_category
+);
+
 module.exports = router;
 
 // TODO:
@@ -167,5 +174,5 @@ module.exports = router;
 //           Create a new category - DONE
 //           Get a list of all categories - DONE
 //           Get details of a specific category - DONE
-//           Update details of a specific category
-//           Delete a category (consider the impact on associated products)
+//           Update details of a specific category - DONE
+//           Delete a category (consider the impact on associated products) - DONE

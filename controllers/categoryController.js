@@ -1,5 +1,6 @@
 const { body, param, validationResult } = require("express-validator");
 const Category = require("../models/Category");
+const Product = require("../models/Product");
 
 // CREATE new category
 exports.create_category = async (req, res) => {
@@ -131,3 +132,32 @@ exports.update_category = [
     }
   },
 ];
+
+// DELETE a category and update associated products
+exports.delete_category = async (req, res) => {
+  try {
+    // Extract the category ID from the request parameters
+    const { categoryId } = req.params;
+
+    // Find the category by ID in the database
+    const category = await Category.findById(categoryId);
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    // Find and update associated products to remove the category reference
+    await Product.updateMany(
+      { category: categoryId },
+      { $set: { category: undefined } }
+    );
+
+    // Delete the category
+    await Category.deleteOne({ _id: categoryId });
+
+    res.status(200).json({ message: "Category deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
