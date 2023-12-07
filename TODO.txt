@@ -1,0 +1,27 @@
+1. Category Routes:
+    Create a new category
+    Get a list of all categories
+    Get details of a specific category
+    Update details of a specific category
+    Delete a category (consider the impact on associated products)
+
+2.Review Routes:
+    Create a new review for a product
+    Get reviews for a specific product
+    Get reviews by a specific user
+    Update a review
+    Delete a review
+
+3. Address Routes:
+    Create a new address for a user
+    Get a list of all user addresses
+    Get details of a specific address
+    Update details of a specific address
+    Delete an address
+
+4. Payment Routes:
+    Make a payment for an order
+    Get a list of all payments by a user
+    Get details of a specific payment
+    Update payment status
+    Delete a payment (consider the impact on associated orders)

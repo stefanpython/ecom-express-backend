@@ -5,6 +5,7 @@ const user_controller = require("../controllers/userController");
 const product_controller = require("../controllers/productController");
 const order_controller = require("../controllers/orderController");
 const cart_controller = require("../controllers/cartController");
+const category_controller = require("../controllers/categoryController");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -141,11 +142,17 @@ router.delete(
 // Clear the entire cart for the guest user
 router.delete("/cart/clear_guest", cart_controller.clear_cart);
 
+// ------------------- CATEGORY ROUTES ---------------------
+
+// Create a new category
+router.post("/categories", category_controller.create_category);
+
 module.exports = router;
 
-// TODO:      Cart Routes:
-//              Add a product to the user's cart - DONE
-//              Get the user's cart contents - DONE
-//              Update the quantity of a product in the cart - DONE
-//              Remove a product from the cart - DONE
-//              Clear the entire cart
+// TODO:
+//       Category Routes:
+//           Create a new category
+//           Get a list of all categories
+//           Get details of a specific category
+//           Update details of a specific category
+//           Delete a category (consider the impact on associated products)
