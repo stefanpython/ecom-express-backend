@@ -150,12 +150,15 @@ router.post("/categories", category_controller.create_category);
 // Get list with all categories
 router.get("/category_list", category_controller.category_list);
 
+// Get details of a category
+router.get("/category/:categoryId", category_controller.get_category_details);
+
 module.exports = router;
 
 // TODO:
 //       Category Routes:
 //           Create a new category - DONE
-//           Get a list of all categories
+//           Get a list of all categories - DONE
 //           Get details of a specific category
 //           Update details of a specific category
 //           Delete a category (consider the impact on associated products)

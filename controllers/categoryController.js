@@ -1,3 +1,4 @@
+const { body, param, validationResult } = require("express-validator");
 const Category = require("../models/Category");
 
 // CREATE new category
@@ -46,3 +47,35 @@ exports.category_list = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// GET details of a specific category
+exports.get_category_details = [
+  // Validate category ID
+  param("categoryId").isMongoId().withMessage("Invalid Category ID"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      // Extract the category ID from the request parameters
+      const { categoryId } = req.params;
+
+      // Find the category by ID in the database
+      const category = await Category.findById(categoryId);
+
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+
+      // Send the category details as a response
+      res.status(200).json({ message: "Get request is a success", category });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
