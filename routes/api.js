@@ -6,6 +6,7 @@ const product_controller = require("../controllers/productController");
 const order_controller = require("../controllers/orderController");
 const cart_controller = require("../controllers/cartController");
 const category_controller = require("../controllers/categoryController");
+const review_controller = require("../controllers/reviewController");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -167,12 +168,20 @@ router.delete(
   category_controller.delete_category
 );
 
+// ------------------- REVIEW ROUTES ---------------------
+// Create a new review for a product
+router.post(
+  "/review/create/:productId",
+  passport.authenticate("jwt", { session: false }),
+  review_controller.create_review
+);
+
 module.exports = router;
 
 // TODO:
-//       Category Routes:
-//           Create a new category - DONE
-//           Get a list of all categories - DONE
-//           Get details of a specific category - DONE
-//           Update details of a specific category - DONE
-//           Delete a category (consider the impact on associated products) - DONE
+//      Review Routes:
+//          Create a new review for a product - DONE
+//          Get reviews for a specific product
+//          Get reviews by a specific user
+//          Update a review
+//          Delete a review

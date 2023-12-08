@@ -3,8 +3,6 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
 
 // Basic imports
 const cors = require("cors");
@@ -29,24 +27,6 @@ async function main() {
 main().catch((err) => console.log(err));
 
 var app = express();
-
-const store = new MongoDBStore({
-  uri: mongoURI,
-  collection: "sessions",
-});
-
-// Set up express-session
-app.use(
-  session({
-    secret: "love",
-    resave: false,
-    saveUninitialized: true,
-    store: store,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // Session duration in milliseconds (1 day)
-    },
-  })
-);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
