@@ -195,10 +195,19 @@ router.put(
 router.delete("/review/:reviewId", review_controller.delete_review);
 
 // ------------------- ADDRESS ROUTES ---------------------
+
+// Create a new address for a user
 router.post(
   "/address/",
   passport.authenticate("jwt", { session: false }),
   address_controller.create_user_address
+);
+
+// Get a list of all user addresses
+router.get(
+  "/address_list",
+  passport.authenticate("jwt", { session: false }),
+  address_controller.address_list
 );
 
 module.exports = router;

@@ -42,3 +42,16 @@ exports.create_user_address = [
     }
   },
 ];
+
+// GET a list of addresses
+exports.address_list = async (req, res) => {
+  try {
+    // Retrieve all addresses from the database
+    const addresses = await Address.find();
+
+    res.status(200).json({ message: "List retrieved successfully", addresses });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
