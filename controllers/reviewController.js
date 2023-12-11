@@ -110,3 +110,54 @@ exports.get_user_reviews = [
     }
   },
 ];
+
+// UPDATE a review
+exports.update_review = [
+  // Validate review ID
+  param("reviewId").isMongoId().withMessage("Invalid Review ID"),
+
+  // Validation middleware using express-validator
+  body("rating")
+    .optional({ nullable: true }) // Make the rating field optional
+    .isNumeric()
+    .withMessage("Rating must be a number"),
+  body("comment").optional({ nullable: true }), // Make the comment field optional
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      const { reviewId } = req.params;
+
+      // Destructure fields from the request body
+      const { rating, comment } = req.body;
+
+      // Find the review by ID in the database
+      const review = await Review.findById(reviewId);
+
+      if (!review) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+
+      // Update review fields
+      // Modify the fields based on your requirements
+      review.rating = rating || review.rating;
+      review.comment = comment || review.comment;
+
+      // Save the updated review to the database
+      const updatedReview = await review.save();
+
+      // Send the updated review details as a response
+      res
+        .status(200)
+        .json({ message: "Review updated successfully", updatedReview });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];

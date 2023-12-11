@@ -182,12 +182,19 @@ router.get("/review/product/:productId", review_controller.get_product_reviews);
 // Get reviews by a specific user
 router.get("/review/user/:userId", review_controller.get_user_reviews);
 
+// Update a review
+router.put(
+  "/update_review/:reviewId",
+  passport.authenticate("jwt", { session: false }),
+  review_controller.update_review
+);
+
 module.exports = router;
 
 // TODO:
 //      Review Routes:
 //          Create a new review for a product - DONE
 //          Get reviews for a specific product - DONE
-//          Get reviews by a specific user
-//          Update a review
+//          Get reviews by a specific user - DONE
+//          Update a review - DONE
 //          Delete a review
