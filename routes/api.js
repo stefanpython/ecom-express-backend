@@ -176,6 +176,9 @@ router.post(
   review_controller.create_review
 );
 
+// Get reviews for a product
+router.get("/review/product/:productId", review_controller.get_product_review);
+
 module.exports = router;
 
 // TODO:
