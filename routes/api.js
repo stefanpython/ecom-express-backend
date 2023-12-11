@@ -7,6 +7,7 @@ const order_controller = require("../controllers/orderController");
 const cart_controller = require("../controllers/cartController");
 const category_controller = require("../controllers/categoryController");
 const review_controller = require("../controllers/reviewController");
+const address_controller = require("../controllers/addressController");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -169,6 +170,7 @@ router.delete(
 );
 
 // ------------------- REVIEW ROUTES ---------------------
+
 // Create a new review for a product
 router.post(
   "/review/create/:productId",
@@ -192,12 +194,19 @@ router.put(
 // Delete a review
 router.delete("/review/:reviewId", review_controller.delete_review);
 
+// ------------------- ADDRESS ROUTES ---------------------
+router.post(
+  "/address/",
+  passport.authenticate("jwt", { session: false }),
+  address_controller.create_user_address
+);
+
 module.exports = router;
 
 // TODO:
-//      Review Routes:
-//          Create a new review for a product - DONE
-//          Get reviews for a specific product - DONE
-//          Get reviews by a specific user - DONE
-//          Update a review - DONE
-//          Delete a review
+// Address Routes:
+//     Create a new address for a user - DONE
+//     Get a list of all user addresses
+//     Get details of a specific address
+//     Update details of a specific address
+//     Delete an address

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const addressSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  addressLine1: String,
+  addressLine: String,
   postalCode: String,
   phone: Number,
 });

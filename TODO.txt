@@ -1,10 +1,5 @@
 
-3. Address Routes:
-    Create a new address for a user
-    Get a list of all user addresses
-    Get details of a specific address
-    Update details of a specific address
-    Delete an address
+
 
 4. Payment Routes:
     Make a payment for an order
