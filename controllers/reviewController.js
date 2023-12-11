@@ -161,3 +161,37 @@ exports.update_review = [
     }
   },
 ];
+
+// DELETE a review
+exports.delete_review = [
+  // Validation middleware for productId
+  param("reviewId").isMongoId().withMessage("Invalid reviewId"),
+
+  // Check for validation errors
+  (req, res, next) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+    next();
+  },
+
+  // Try deleting the product
+  async (req, res) => {
+    try {
+      const { reviewId } = req.params; // Extract productId from the URL parameter
+
+      // Find the product by productId and delete it
+      const result = await Review.deleteOne({ _id: reviewId });
+
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+
+      res.status(200).json({ message: "Review deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];

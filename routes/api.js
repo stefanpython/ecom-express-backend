@@ -189,6 +189,9 @@ router.put(
   review_controller.update_review
 );
 
+// Delete a review
+router.delete("/review/:reviewId", review_controller.delete_review);
+
 module.exports = router;
 
 // TODO:
