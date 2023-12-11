@@ -56,7 +56,7 @@ exports.create_review = [
 ];
 
 // GET reviews of a product
-exports.get_product_review = [
+exports.get_product_reviews = [
   // Validate review ID
   param("productId").isMongoId().withMessage("Invalid Product ID"),
 
@@ -72,6 +72,34 @@ exports.get_product_review = [
 
       // Fetch reviews for the specified product
       const reviews = await Review.find({ product: productId });
+
+      res
+        .status(200)
+        .json({ message: "Reviews retrieved successfully", reviews });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
+
+// GET reviews for a specific user
+exports.get_user_reviews = [
+  // Validate review ID
+  param("userId").isMongoId().withMessage("Invalid User ID"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      const { userId } = req.params;
+
+      // Fetch reviews for the specified product
+      const reviews = await Review.find({ user: userId });
 
       res
         .status(200)

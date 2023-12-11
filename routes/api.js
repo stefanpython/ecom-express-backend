@@ -177,14 +177,17 @@ router.post(
 );
 
 // Get reviews for a product
-router.get("/review/product/:productId", review_controller.get_product_review);
+router.get("/review/product/:productId", review_controller.get_product_reviews);
+
+// Get reviews by a specific user
+router.get("/review/user/:userId", review_controller.get_user_reviews);
 
 module.exports = router;
 
 // TODO:
 //      Review Routes:
 //          Create a new review for a product - DONE
-//          Get reviews for a specific product
+//          Get reviews for a specific product - DONE
 //          Get reviews by a specific user
 //          Update a review
 //          Delete a review
