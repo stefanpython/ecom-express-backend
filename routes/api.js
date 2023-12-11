@@ -213,12 +213,19 @@ router.get(
 // Get details of a specific address
 router.get("/address/:addressId", address_controller.get_address_details);
 
+// Update details of a specific address
+router.put(
+  "/update_address/:addressId",
+  passport.authenticate("jwt", { session: false }),
+  address_controller.update_address_details
+);
+
 module.exports = router;
 
 // TODO:
 // Address Routes:
 //     Create a new address for a user - DONE
 //     Get a list of all user addresses - DONE
-//     Get details of a specific address
+//     Get details of a specific address - DONE
 //     Update details of a specific address
 //     Delete an address
