@@ -210,12 +210,15 @@ router.get(
   address_controller.address_list
 );
 
+// Get details of a specific address
+router.get("/address/:addressId", address_controller.get_address_details);
+
 module.exports = router;
 
 // TODO:
 // Address Routes:
 //     Create a new address for a user - DONE
-//     Get a list of all user addresses
+//     Get a list of all user addresses - DONE
 //     Get details of a specific address
 //     Update details of a specific address
 //     Delete an address
