@@ -69,7 +69,7 @@ exports.login = async (req, res, next) => {
       { expiresIn: "7days" }
     );
 
-    // Check if there is a guest cart associated with the session
+    // Check if there is a guest cart
     const guestCart = await Cart.findOne({ user: null });
 
     if (guestCart) {

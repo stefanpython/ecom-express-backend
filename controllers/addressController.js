@@ -1,6 +1,5 @@
 const { body, param, validationResult } = require("express-validator");
 const Address = require("../models/Address");
-const User = require("../models/User");
 
 // CREATE a new address for a user
 exports.create_user_address = [

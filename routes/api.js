@@ -8,6 +8,7 @@ const cart_controller = require("../controllers/cartController");
 const category_controller = require("../controllers/categoryController");
 const review_controller = require("../controllers/reviewController");
 const address_controller = require("../controllers/addressController");
+const payment_controller = require("../controllers/paymentController");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -223,12 +224,21 @@ router.put(
 // Delete an address
 router.delete("/address/:addressId", address_controller.delete_address);
 
+// ------------------- PAYMENT ROUTES ---------------------
+
+// Make a payment for an order
+router.post(
+  "/payment/:orderId",
+  passport.authenticate("jwt", { session: false }),
+  payment_controller.make_payment
+);
+
 module.exports = router;
 
 // TODO:
-// Address Routes:
-//     Create a new address for a user - DONE
-//     Get a list of all user addresses - DONE
-//     Get details of a specific address - DONE
-//     Update details of a specific address - DONE
-//     Delete an address
+//  Payment Routes:
+//        Make a payment for an order - DONE
+//        Get a list of all payments by a user
+//        Get details of a specific payment
+//        Update payment status
+//        Delete a payment (consider the impact on associated orders)

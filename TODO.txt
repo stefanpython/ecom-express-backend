@@ -1,9 +1,0 @@
-
-
-
-4. Payment Routes:
-    Make a payment for an order
-    Get a list of all payments by a user
-    Get details of a specific payment
-    Update payment status
-    Delete a payment (consider the impact on associated orders)
