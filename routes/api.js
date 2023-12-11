@@ -220,6 +220,9 @@ router.put(
   address_controller.update_address_details
 );
 
+// Delete an address
+router.delete("/address/:addressId", address_controller.delete_address);
+
 module.exports = router;
 
 // TODO:
@@ -227,5 +230,5 @@ module.exports = router;
 //     Create a new address for a user - DONE
 //     Get a list of all user addresses - DONE
 //     Get details of a specific address - DONE
-//     Update details of a specific address
+//     Update details of a specific address - DONE
 //     Delete an address

@@ -140,3 +140,37 @@ exports.update_address_details = [
     }
   },
 ];
+
+// DELETE an address
+exports.delete_address = [
+  // Validation middleware for addressId
+  param("addressId").isMongoId().withMessage("Invalid addressId"),
+
+  // Check for validation errors
+  (req, res, next) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+    next();
+  },
+
+  // Try deleting the product
+  async (req, res) => {
+    try {
+      const { addressId } = req.params; // Extract addressId from the URL parameter
+
+      // Find the product by addressId and delete it
+      const result = await Address.deleteOne({ _id: addressId });
+
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: "Address not found" });
+      }
+
+      res.status(200).json({ message: "Address deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
