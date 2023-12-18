@@ -254,12 +254,11 @@ router.put(
   payment_controller.update_payment_status
 );
 
-module.exports = router;
+// Delete a payment
+router.delete(
+  "/payment/:paymentId",
+  passport.authenticate("jwt", { session: false }),
+  payment_controller.delete_payment
+);
 
-// TODO:
-//  Payment Routes:
-//        Make a payment for an order - DONE
-//        Get a list of all payments by a user - DONE
-//        Get details of a specific payment - DONE
-//        Update payment status
-//        Delete a payment (consider the impact on associated orders)
+module.exports = router;

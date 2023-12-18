@@ -185,3 +185,48 @@ exports.update_payment_status = [
     }
   },
 ];
+
+// Delete a payment
+exports.delete_payment = [
+  // Validate payment ID
+  param("paymentId").isMongoId().withMessage("Invalid Payment ID"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      // Extract the payment ID from the request parameters
+      const { paymentId } = req.params;
+
+      // Find orders where the payment ID matches the order ID
+      const associatedOrders = await Order.find({ _id: paymentId });
+
+      if (associatedOrders.length === 0) {
+        // If no associated orders, simply delete the payment
+        await Payment.deleteOne({ _id: paymentId });
+
+        return res
+          .status(200)
+          .json({ message: "Payment deleted successfully" });
+      }
+
+      // Update each associated order to remove the payment reference
+      for (const order of associatedOrders) {
+        order.payment = undefined;
+        await order.save();
+      }
+
+      // Delete the payment using deleteOne
+      await Payment.deleteOne({ _id: paymentId });
+
+      res.status(200).json({ message: "Payment deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
