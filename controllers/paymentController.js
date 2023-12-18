@@ -104,3 +104,84 @@ exports.get_user_payments = [
     }
   },
 ];
+
+// Get details of a specific payment
+exports.get_payment_details = [
+  // Validate payment ID
+  param("paymentId").isMongoId().withMessage("Invalid Payment ID"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      // Extract the payment ID from the request parameters
+      const { paymentId } = req.params;
+
+      // Find the payment by ID in the database
+      const payment = await Payment.findById(paymentId);
+
+      if (!payment) {
+        return res.status(404).json({ message: "Payment not found" });
+      }
+
+      res.status(200).json({
+        message: "Get request is a success",
+        payment,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
+
+// Update payment status
+exports.update_payment_status = [
+  // Validate payment ID
+  param("paymentId").isMongoId().withMessage("Invalid Payment ID"),
+
+  // Validate payment status
+  body("status")
+    .isString()
+    .isIn(["Pending", "Paid", "Failed"])
+    .withMessage("Invalid payment status"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      // Extract the payment ID and status from the request parameters and body
+      const { paymentId } = req.params;
+      const { status } = req.body;
+
+      // Find the payment by ID in the database
+      const payment = await Payment.findById(paymentId);
+
+      if (!payment) {
+        return res.status(404).json({ message: "Payment not found" });
+      }
+
+      // Update the payment status
+      payment.status = status;
+
+      // Save the updated payment to the database
+      const updatedPayment = await payment.save();
+
+      res.status(200).json({
+        message: "Payment status updated successfully",
+        payment: updatedPayment,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];

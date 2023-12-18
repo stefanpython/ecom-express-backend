@@ -240,12 +240,26 @@ router.get(
   payment_controller.get_user_payments
 );
 
+// Get details of a specific payment
+router.get(
+  "/payment/:paymentId",
+  passport.authenticate("jwt", { session: false }),
+  payment_controller.get_payment_details
+);
+
+// Update payment status
+router.put(
+  "/payment/:paymentId/status",
+  passport.authenticate("jwt", { session: false }),
+  payment_controller.update_payment_status
+);
+
 module.exports = router;
 
 // TODO:
 //  Payment Routes:
 //        Make a payment for an order - DONE
-//        Get a list of all payments by a user
-//        Get details of a specific payment
+//        Get a list of all payments by a user - DONE
+//        Get details of a specific payment - DONE
 //        Update payment status
 //        Delete a payment (consider the impact on associated orders)
