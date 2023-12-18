@@ -74,3 +74,33 @@ exports.make_payment = [
     }
   },
 ];
+
+// Get a list of all payments by a user
+exports.get_user_payments = [
+  // Validate user ID
+  param("userId").isMongoId().withMessage("Invalid User ID"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      // Extract the user ID from the request parameters
+      const { userId } = req.params;
+
+      // Find all payments by the user ID in the database
+      const userPayments = await Payment.find({ user: userId });
+
+      res.status(200).json({
+        message: "Get request is a success",
+        payments: userPayments,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];

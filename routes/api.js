@@ -233,6 +233,13 @@ router.post(
   payment_controller.make_payment
 );
 
+// Get a list of all payments by a user
+router.get(
+  "/payment/user/:userId",
+  passport.authenticate("jwt", { session: false }),
+  payment_controller.get_user_payments
+);
+
 module.exports = router;
 
 // TODO:
