@@ -20,6 +20,13 @@ router.post("/sign-up", user_controller.signup);
 router.post("/login", user_controller.login);
 router.post("/forgot-password", user_controller.forgotPassword);
 
+// Update user details
+router.put(
+  "/user/update/:userId",
+  passport.authenticate("jwt", { session: false }),
+  user_controller.update_user_details
+);
+
 //------------------ PRODUCT ROUTES --------------------
 
 // -- Create product --

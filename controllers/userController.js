@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Cart = require("../models/Cart");
-const { body } = require("express-validator");
+const { body, param, validationResult } = require("express-validator");
 const passport = require("passport");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
@@ -137,6 +137,54 @@ exports.forgotPassword = [
       res.status(200).json({ message: "Password reset email sent" });
     } catch (err) {
       console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
+
+// UPDATE details of a specific user
+exports.update_user_details = [
+  // Validate user ID
+  param("userId").isMongoId().withMessage("Invalid User ID"),
+
+  // Validation middleware using express-validator
+  body("firstName").notEmpty().withMessage("First name cannot be empty"),
+  body("lastName").notEmpty().withMessage("Last name cannot be empty"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      // Extract the user ID from the request parameters
+      const { userId } = req.params;
+
+      // Destructure fields from the request body
+      const { firstName, lastName } = req.body;
+
+      // Find the user by ID in the database
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Update user fields
+      user.firstName = firstName || user.firstName;
+      user.lastName = lastName || user.lastName;
+
+      // Save the updated user to the database
+      const updatedUser = await user.save();
+
+      // Send the updated user details as a response
+      res
+        .status(200)
+        .json({ message: "User updated successfully", updatedUser });
+    } catch (error) {
+      console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
   },
