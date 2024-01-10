@@ -8,7 +8,8 @@ exports.create_review = [
   body("rating")
     .isInt({ min: 1, max: 5 })
     .withMessage("Rating must be between 1 and 5"),
-  body("comment").optional().isString(),
+  body("comment").isString(),
+  body("title").isString(),
 
   // Check for validation errors
   async (req, res) => {
@@ -22,7 +23,7 @@ exports.create_review = [
       const user = req.user._id;
 
       // Destructure fields from the request body
-      const { rating, comment } = req.body;
+      const { rating, comment, title } = req.body;
 
       // Include :productId in the route to associate the review with a product
       const productId = req.params.productId;
@@ -39,6 +40,7 @@ exports.create_review = [
         product: productId,
         rating,
         comment,
+        title,
       });
 
       // Save the new review to the database
@@ -121,7 +123,8 @@ exports.update_review = [
     .optional({ nullable: true }) // Make the rating field optional
     .isNumeric()
     .withMessage("Rating must be a number"),
-  body("comment").optional({ nullable: true }), // Make the comment field optional
+  body("comment").optional({ nullable: true }),
+  body("title").optional({ nullable: true }),
 
   // Check for validation errors
   async (req, res) => {
@@ -134,7 +137,7 @@ exports.update_review = [
       const { reviewId } = req.params;
 
       // Destructure fields from the request body
-      const { rating, comment } = req.body;
+      const { rating, comment, title } = req.body;
 
       // Find the review by ID in the database
       const review = await Review.findById(reviewId);
@@ -147,6 +150,7 @@ exports.update_review = [
       // Modify the fields based on your requirements
       review.rating = rating || review.rating;
       review.comment = comment || review.comment;
+      review.title = title || review.title;
 
       // Save the updated review to the database
       const updatedReview = await review.save();
