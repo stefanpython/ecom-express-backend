@@ -71,6 +71,13 @@ exports.login = async (req, res, next) => {
       { expiresIn: "7days" }
     );
 
+    // // Set the token in a cookie with the HttpOnly flag
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      credentials: true, // Add this line
+    });
+
     // Check if there is a guest cart
     const guestCart = await Cart.findOne({ user: null });
 
