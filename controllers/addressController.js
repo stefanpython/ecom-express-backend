@@ -50,7 +50,25 @@ exports.create_user_address = [
   },
 ];
 
-// GET a list of addresses
+// GET address for the logged in user
+exports.get_user_addresses = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find all addresses for the logged-in user
+    const addresses = await Address.find({ user: userId });
+
+    res.status(200).json({
+      message: "Addresses fetched successfully",
+      addresses,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// GET a list of all users`s addresses
 exports.address_list = async (req, res) => {
   try {
     // Retrieve all addresses from the database

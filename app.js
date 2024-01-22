@@ -33,7 +33,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 const corsOptions = {
-  origin: "http://localhost:5173", // Update with your frontend URL
+  origin: "http://localhost:5174", // Update with your frontend URL
   credentials: true,
 };
 

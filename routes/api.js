@@ -229,6 +229,13 @@ router.post(
   address_controller.create_user_address
 );
 
+// Get all addresses for a logged in user
+router.get(
+  "/user/addresses/:userId",
+  passport.authenticate("jwt", { session: false }),
+  address_controller.get_user_addresses
+);
+
 // Get a list of all user addresses
 router.get(
   "/address_list",
