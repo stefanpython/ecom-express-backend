@@ -20,6 +20,23 @@ router.post("/sign-up", user_controller.signup);
 router.post("/login", user_controller.login);
 router.post("/forgot-password", user_controller.forgotPassword);
 
+// Get user details
+router.get(
+  "/user/:userId",
+  passport.authenticate("jwt", { session: false }),
+  user_controller.get_user_details
+);
+
+// POST request to invalidate the token and log the user out
+router.post(
+  "/logout",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.clearCookie("token");
+    res.json({ message: "Logout successful" });
+  }
+);
+
 // Update user details
 router.put(
   "/user/update/:userId",
@@ -207,7 +224,7 @@ router.delete("/review/:reviewId", review_controller.delete_review);
 
 // Create a new address for a user
 router.post(
-  "/address/",
+  "/address",
   passport.authenticate("jwt", { session: false }),
   address_controller.create_user_address
 );

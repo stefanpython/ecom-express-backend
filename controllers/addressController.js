@@ -1,5 +1,6 @@
 const { body, param, validationResult } = require("express-validator");
 const Address = require("../models/Address");
+const User = require("../models/User");
 
 // CREATE a new address for a user
 exports.create_user_address = [
@@ -29,6 +30,13 @@ exports.create_user_address = [
 
       // Save the new address to the database
       const savedAddress = await newAddress.save();
+
+      // Update the user document to include the new address
+      await User.findByIdAndUpdate(
+        user,
+        { $push: { address: savedAddress._id } },
+        { new: true }
+      );
 
       // Send the newly created address details as a response
       res.status(201).json({

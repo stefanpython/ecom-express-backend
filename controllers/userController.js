@@ -71,11 +71,10 @@ exports.login = async (req, res, next) => {
       { expiresIn: "7days" }
     );
 
-    // // Set the token in a cookie with the HttpOnly flag
     res.cookie("token", token, {
-      httpOnly: true,
+      // httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      credentials: true, // Add this line
+      // credentials: true,
     });
 
     // Check if there is a guest cart
@@ -90,6 +89,38 @@ exports.login = async (req, res, next) => {
     res.json({ message: "Login successful", token });
   })(req, res, next);
 };
+
+// Get user details
+exports.get_user_details = [
+  // Validate user ID
+  param("userId").isMongoId().withMessage("Invalid User ID"),
+
+  // Check for validation errors
+  async (req, res) => {
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    try {
+      // Extract the user ID from the request parameters
+      const { userId } = req.params;
+
+      // Find the user by ID in the database, excluding the password field
+      const user = await User.findById(userId).select("-password");
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Send the user details as a response
+      res.status(200).json({ message: "Get user details success", user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
 
 // Implement reset password
 
