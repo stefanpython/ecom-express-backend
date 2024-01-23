@@ -1,6 +1,7 @@
 const { body, param, validationResult } = require("express-validator");
 const Order = require("../models/Order");
 const User = require("../models/User");
+const Product = require("../models/Product");
 
 // CREATE new order
 exports.order_create = [
@@ -50,6 +51,32 @@ exports.order_create = [
       res
         .status(201)
         .json({ message: "Order created successfully", savedOrder });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+];
+
+// GET details of a specific order for a logged-in user
+exports.get_user_order_details = [
+  // Retrieve the authenticated user data from req.user
+  async (req, res) => {
+    try {
+      // Use authenticated user data from req.user
+      const { _id: user } = req.user;
+
+      // Find all orders for the logged-in user and populate the product data
+      const userOrders = await Order.find({ user })
+        .populate({
+          path: "items.product",
+          select: "name",
+        })
+        .exec();
+
+      res
+        .status(200)
+        .json({ message: "User orders retrieved successfully", userOrders });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });

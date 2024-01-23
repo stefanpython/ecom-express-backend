@@ -82,6 +82,13 @@ router.post(
   order_controller.order_create
 );
 
+// GET details of orders for the logged-in user
+router.get(
+  "/user/:orderId/orders",
+  passport.authenticate("jwt", { session: false }),
+  order_controller.get_user_order_details
+);
+
 // -- Get list of all orders
 router.get(
   "/order_list",
