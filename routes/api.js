@@ -170,13 +170,13 @@ router.delete(
 //                   --------------
 // Clear the entire cart for the authenticated user
 router.delete(
-  "/cart/clear_auth",
+  "/clear_cart",
   passport.authenticate("jwt", { session: false }),
   cart_controller.clear_cart
 );
 
 // Clear the entire cart for the guest user
-router.delete("/cart/clear_guest", cart_controller.clear_cart);
+router.delete("/clear_cart", cart_controller.clear_cart);
 
 // ------------------- CATEGORY ROUTES ---------------------
 
