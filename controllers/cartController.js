@@ -65,7 +65,7 @@ exports.get_cart_content = async (req, res) => {
     // Find the user's cart based on the user ID
     const userCart = await Cart.findOne({ user: userId }).populate(
       "items.product",
-      "name price"
+      "name price image"
     );
 
     if (!userCart) {

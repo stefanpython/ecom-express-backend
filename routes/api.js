@@ -121,6 +121,7 @@ router.delete(
 
 // -- Add a product to the user's cart --
 router.post("/add_cart_guest", cart_controller.add_product_to_cart);
+
 router.post(
   "/add_cart_auth",
   passport.authenticate("jwt", { session: false }),

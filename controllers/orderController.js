@@ -114,7 +114,12 @@ exports.get_order_details = [
       const { orderId } = req.params;
 
       // Find the product by ID in the database
-      const order = await Order.findById(orderId);
+      const order = await Order.findById(orderId)
+        .populate({
+          path: "items.product",
+          select: "name",
+        })
+        .exec();
 
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
