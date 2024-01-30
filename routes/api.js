@@ -262,7 +262,11 @@ router.put(
 );
 
 // Delete an address
-router.delete("/address/:addressId", address_controller.delete_address);
+router.delete(
+  "/address/:addressId",
+  passport.authenticate("jwt", { session: false }),
+  address_controller.delete_address
+);
 
 // ------------------- PAYMENT ROUTES ---------------------
 

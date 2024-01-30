@@ -73,7 +73,9 @@ exports.get_product_reviews = [
       const { productId } = req.params;
 
       // Fetch reviews for the specified product
-      const reviews = await Review.find({ product: productId });
+      const reviews = await Review.find({ product: productId })
+        .populate("user", "firstName lastName")
+        .sort({ createdAt: -1 });
 
       res
         .status(200)

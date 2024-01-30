@@ -117,7 +117,7 @@ exports.get_order_details = [
       const order = await Order.findById(orderId)
         .populate({
           path: "items.product",
-          select: "name image",
+          select: "price name image",
         })
         .exec();
 
