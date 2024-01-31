@@ -32,10 +32,10 @@ var app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-const corsOptions = {
-  origin: "http://localhost:5173", // Update with your frontend URL
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: "http://localhost:5173", // Update with your frontend URL
+//   credentials: true,
+// };
 
 app.use(cors());
 app.use(logger("dev"));
@@ -43,6 +43,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+// Define the '/images' route
+app.get("/images/:imageName", (req, res) => {
+  const imageName = req.params.imageName;
+  const imagePath = path.join(__dirname, "public/images", imageName);
+
+  res.sendFile(imagePath);
+});
 
 // Define passport login strategy
 passport.use(
