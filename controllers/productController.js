@@ -52,7 +52,7 @@ exports.create_product = [
 exports.product_list = async (req, res) => {
   try {
     // Retrieve all products from the database
-    const products = await Product.find();
+    const products = await Product.find().populate("category");
 
     res.status(200).json({ message: "List retrieved successfully", products });
   } catch (error) {

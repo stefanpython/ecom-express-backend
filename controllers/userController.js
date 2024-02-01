@@ -132,8 +132,8 @@ const transporter = nodemailer.createTransport({
   host: "smtp.ethereal.email",
   port: 587,
   auth: {
-    user: "georgiana.lueilwitz@ethereal.email",
-    pass: "cywTXDEAqmQNcbQMrC",
+    user: "lesley.cummings@ethereal.email",
+    pass: "qvauTa9mHhDZAKuyyc",
   },
 });
 
@@ -161,7 +161,7 @@ exports.forgotPassword = [
       await user.save();
 
       // Send the password reset link to the user's email
-      const resetLink = `http://your-frontend-app/reset-password?token=${resetToken}`;
+      const resetLink = `http://localhost:5173/reset-password?token=${resetToken}`;
       const mailOptions = {
         from: "noreply@example.com", // Replace with your sender email
         to: email,
