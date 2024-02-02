@@ -1,8 +1,34 @@
 const { body, param, validationResult } = require("express-validator");
 const Product = require("../models/Product");
+const multer = require("multer");
+
+// Set up multer storage and filename for uploading images
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/images");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // CREATE new product
 exports.create_product = [
+  // Handle single file upload with field name "image"
+  (req, res, next) => {
+    const uploadMiddleware = upload.single("image");
+    uploadMiddleware(req, res, (err) => {
+      if (err) {
+        console.error("Error uploading file:", err);
+        return res.status(400).json({ error: err.message });
+      }
+      console.log("File uploaded successfully");
+      next();
+    });
+  },
+
   // Validation middleware using express-validator
   body("name").trim().isLength({ min: 1 }).withMessage("Name is required"),
   body("description")
@@ -23,7 +49,7 @@ exports.create_product = [
 
     try {
       // Destructure fields from the request body
-      const { name, description, price, quantity, category, image } = req.body;
+      const { name, description, price, quantity, categoryId } = req.body;
 
       // Create a new product
       const newProduct = new Product({
@@ -31,8 +57,8 @@ exports.create_product = [
         description,
         price,
         quantity,
-        category,
-        image,
+        category: categoryId,
+        image: req.file ? req.file.filename : null,
       });
 
       // Save the new product to the database
