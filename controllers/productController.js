@@ -124,6 +124,9 @@ exports.update_product_details = [
   // Validate product ID
   param("productId").isMongoId().withMessage("Invalid Product ID"),
 
+  // Handle single file upload with field name "image"
+  upload.single("image"),
+
   // Validation middleware for request body fields
   body("name").trim().isLength({ min: 1 }).withMessage("Name is required"),
   body("description")
@@ -162,7 +165,11 @@ exports.update_product_details = [
       product.price = price || product.price;
       product.quantity = quantity || product.quantity;
       product.category = category || product.category;
-      product.image = image || product.image;
+
+      // Check if there is a new image file
+      if (req.file) {
+        product.image = req.file.filename;
+      }
 
       // Save the updated product to the database
       const updatedProduct = await product.save();
