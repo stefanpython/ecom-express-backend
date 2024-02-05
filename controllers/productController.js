@@ -104,7 +104,7 @@ exports.get_product_details = [
       const { productId } = req.params;
 
       // Find the product by ID in the database
-      const product = await Product.findById(productId);
+      const product = await Product.findById(productId).populate("category");
 
       if (!product) {
         return res.status(404).json({ message: "Product not found" });
@@ -135,8 +135,10 @@ exports.update_product_details = [
     .withMessage("Description is required"),
   body("price").isNumeric().withMessage("Price must be a number"),
   body("quantity").isInt().withMessage("Quantity must be an integer"),
-  body("category").isMongoId().withMessage("Category must be a valid ObjectId"),
-  body("image").optional().trim().isURL().withMessage("Image URL is required"),
+  body("category")
+    .optional()
+    .isMongoId()
+    .withMessage("Category must be a valid ObjectId"),
 
   // Check for validation errors
   async (req, res) => {
@@ -159,17 +161,16 @@ exports.update_product_details = [
         return res.status(404).json({ message: "Product not found" });
       }
 
+      // Handle profile image
+      const productImage = req.file ? req.file.filename : null;
+
       // Update product fields
       product.name = name || product.name;
       product.description = description || product.description;
       product.price = price || product.price;
       product.quantity = quantity || product.quantity;
       product.category = category || product.category;
-
-      // Check if there is a new image file
-      if (req.file) {
-        product.image = req.file.filename;
-      }
+      product.image = productImage || product.image;
 
       // Save the updated product to the database
       const updatedProduct = await product.save();
