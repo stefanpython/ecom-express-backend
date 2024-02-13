@@ -6,6 +6,7 @@ const { body, param, validationResult } = require("express-validator");
 const passport = require("passport");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 // Signup
 exports.signup = [
@@ -67,7 +68,7 @@ exports.login = async (req, res, next) => {
     // Generate JWT token for successful authentication
     const token = jwt.sign(
       { userId: user.id, username: user.fullName },
-      "tao",
+      process.env.passportKey,
       { expiresIn: "7days" }
     );
 
@@ -132,8 +133,8 @@ const transporter = nodemailer.createTransport({
   host: "smtp.ethereal.email",
   port: 587,
   auth: {
-    user: "lesley.cummings@ethereal.email",
-    pass: "qvauTa9mHhDZAKuyyc",
+    user: process.env.MAILERNAME,
+    pass: process.env.MAILERPASS,
   },
 });
 

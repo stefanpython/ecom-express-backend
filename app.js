@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+require("dotenv").config();
 
 // Basic imports
 const cors = require("cors");
@@ -19,7 +20,7 @@ const ExtractJWT = require("passport-jwt").ExtractJwt;
 var apiRouter = require("./routes/api");
 
 // Connect to database
-const mongoURI = `mongodb+srv://dementia1349:test@cluster0.zw0djkv.mongodb.net/ecom-express?retryWrites=true&w=majority`;
+const mongoURI = process.env.MONGODB_URI;
 async function main() {
   await mongoose.connect(mongoURI);
   console.log("Connected to MongoDb Atlas");
@@ -31,11 +32,6 @@ var app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-
-// const corsOptions = {
-//   origin: "http://localhost:5173", // Update with your frontend URL
-//   credentials: true,
-// };
 
 app.use(cors());
 app.use(logger("dev"));
@@ -86,7 +82,7 @@ passport.use(
 passport.use(
   new JWTstrategy(
     {
-      secretOrKey: "tao",
+      secretOrKey: process.env.passportKey,
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     },
 
