@@ -181,7 +181,11 @@ router.delete("/clear_cart", cart_controller.clear_cart);
 // ------------------- CATEGORY ROUTES ---------------------
 
 // Create a new category
-router.post("/categories", category_controller.create_category);
+router.post(
+  "/create_category",
+  passport.authenticate("jwt", { session: false }),
+  category_controller.create_category
+);
 
 // Get list with all categories
 router.get("/category_list", category_controller.category_list);
@@ -211,6 +215,9 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   review_controller.create_review
 );
+
+// Get list of all reviews
+router.get("/reviews_list", review_controller.get_reviews_list);
 
 // Get reviews for a product
 router.get("/review/product/:productId", review_controller.get_product_reviews);

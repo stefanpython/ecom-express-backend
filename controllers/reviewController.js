@@ -57,6 +57,19 @@ exports.create_review = [
   },
 ];
 
+// GET a list of all reviews
+exports.get_reviews_list = async (req, res) => {
+  try {
+    // Retrieve all products from the database
+    const reviews = await Review.find();
+
+    res.status(200).json({ message: "List retrieved successfully", reviews });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 // GET reviews of a product
 exports.get_product_reviews = [
   // Validate review ID
